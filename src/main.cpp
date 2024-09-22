@@ -4,7 +4,7 @@
 #include <Logger.h>
 
 ESP32Domotic*  domoticModule  = new ESP32Domotic();
-Channel*       channel        = new Channel("c1", "channel_1", 1, OUTPUT, false, true);
+Channel*       channel        = new Channel("c1", "channel_1", 1, OUTPUT, false);
 
 void setup() {
   Serial.begin(115200);
@@ -29,7 +29,6 @@ void setup() {
 }
 
 void loop() {
-  // domoticModule.cycle();
   // log("Channel previous state", channel.getPrevState());
   // log("Channel current raw state", channel.getRawState());
   // log("Channel current mapped state", channel.getMappedState());
