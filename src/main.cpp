@@ -1,37 +1,43 @@
 #include <LittleFS.h>
 #include "main.h"
-#include <ESP32Domotic.h>
+#include <ESPDomotic.h>
 #include <Logger.h>
 
-ESP32Domotic*  domoticModule  = new ESP32Domotic();
-Channel*       channel        = new Channel("c1", "channel_1", 1, OUTPUT, false);
+ESPDomotic*  domoticModule  = new ESPDomotic();
+Channel*     outputChannel  = new Channel("oc1", "out_channel_1", 1, OUTPUT, false, CHANNEL_NO_TIMER);
+Channel*     inputChannel   = new Channel("ic1", "in_channel_1", 2, INPUT, true, CHANNEL_NO_TIMER);
 
 void setup() {
   Serial.begin(115200);
-  log("Switch example setup");
-  channel->setState(LOW);
-  channel->setTimer(20);
-  channel->setEnabled(false);
+  log(F("Switch example setup"));
+  outputChannel->setState(LOW);
+  outputChannel->setTimer(2000);
+  inputChannel->setTimer(3000);
   domoticModule->setModuleType("switch");
   domoticModule->setWifiConnectTimeout(20);
   domoticModule->setConfigPortalTimeout(120);
   domoticModule->setPortalSSID("proeza-domotics-demo");
-  domoticModule->addChannel(channel);
+  domoticModule->addChannel(outputChannel);
+  domoticModule->addChannel(inputChannel);
   domoticModule->init();
 
-  log("Channel name", channel->getName());
-  log("Channel is analog", channel->isAnalog());
-  log("Channel is output", channel->isOutput());
-  log("Channel is enabled", channel->isEnabled());
-  log("Channel timer", channel->getTimer());
+  log("Output channel name", outputChannel->getName());
+  log("Output channel is analog", outputChannel->isAnalog());
+  log("Output channel is output", outputChannel->isOutput());
+  log("Output channel is enabled", outputChannel->isEnabled());
+  log("Output channel timer", outputChannel->getTimer());
+  
+  log("Input channel name", inputChannel->getName());
+  log("Input channel is analog", inputChannel->isAnalog());
+  log("Input channel is output", inputChannel->isOutput());
+  log("Input channel is enabled", inputChannel->isEnabled());
+  log("Input channel timer", inputChannel->getTimer());
+
   log("Module location", domoticModule->getConfig()->getModuleLocation());
   log("Module name", domoticModule->getConfig()->getModuleName());
 }
 
 void loop() {
-  // log("Channel previous state", channel.getPrevState());
-  // log("Channel current raw state", channel.getRawState());
-  // log("Channel current mapped state", channel.getMappedState());
   domoticModule->cycle();
   delay(100);
 }
